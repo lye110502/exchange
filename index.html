@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>예은 ♥ 준희 교환일기</title>
+  <title>교환일기</title>
   <style>
     :root {
       --bg: #fff7fb;
@@ -223,7 +223,7 @@
 </head>
 <body>
   <section id="login" class="card password-box">
-    <h2>🔐 둘만의 교환일기</h2>
+    <h2>🔐 교환일기</h2>
     <p style="color: var(--muted); line-height: 1.6;">비밀번호를 입력하면 편지를 쓰고 읽을 수 있어요.</p>
     <label for="password">비밀번호</label>
     <input id="password" type="password" placeholder="둘만 아는 비밀번호" />
@@ -233,8 +233,8 @@
 
   <main id="app" class="hidden">
     <header>
-      <h1>💌 예은 ♥ 준희 교환일기</h1>
-      <p>오늘의 마음을 편지처럼 남겨두기</p>
+      <h1>💌 교환일기</h1>
+     
     </header>
 
     <section class="wrap">
@@ -259,7 +259,7 @@
         <input id="title" placeholder="오늘 편지 제목" />
 
         <label for="content">내용</label>
-        <textarea id="content" placeholder="여기에 편지를 써줘"></textarea>
+        <textarea id="content" placeholder="여기에 편지를 써주새용"></textarea>
 
         <button id="saveBtn" class="primary" onclick="saveLetter()">저장하기</button>
         <div id="saveStatus" class="status"></div>
@@ -288,10 +288,10 @@
 
   <script>
     // 1) 아래 주소를 Apps Script 배포 URL로 바꿔주세요.
-    const API_URL = "여기에_Apps_Script_웹앱_URL_붙여넣기";
+    const API_URL = "https://script.google.com/macros/s/AKfycbyynvVXpUrsFe2iYRCRnxsa_nQRCQSwpBVpnnAiaPPdV8CN2cTUAwvmNbiX4s_1prccOw/exec";
 
     // 2) 둘만 아는 비밀번호로 바꿔주세요.
-    const PASSWORD = "0618";
+    const PASSWORD = "0418";
 
     const $ = (id) => document.getElementById(id);
 
@@ -316,7 +316,7 @@
       const content = $("content").value.trim();
 
       if (!title || !content) {
-        $("saveStatus").textContent = "제목이랑 내용을 둘 다 적어줘!";
+        $("saveStatus").textContent = "제목이랑 내용을 둘 다 적어주용";
         return;
       }
 
