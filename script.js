@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbxLy7Z6aWikpplZWhBUwB-hxCDHiuy5987RqT0bk3-R_KaqQJ4dH1aMMz8uXTcxpR_xrQ/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbx8KuikfwXBJEnUV4sGSUmpKSbSRtsubbrP1ntFt2R2AGohCUH4nKauS85fhqhdtZy8Gg/exec";
 const PASSWORD = "0418";
 
 const $ = (id) => document.getElementById(id);
