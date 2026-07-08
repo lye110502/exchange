@@ -1,0 +1,909 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>교환일기</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #020407;
+      --panel: rgba(7, 13, 20, 0.74);
+      --panel-strong: rgba(10, 18, 27, 0.88);
+      --input: rgba(2, 6, 11, 0.66);
+      --text: #f4f7fb;
+      --muted: rgba(244, 247, 251, 0.58);
+      --line: rgba(219, 232, 255, 0.30);
+      --line-soft: rgba(219, 232, 255, 0.16);
+      --blue: #74adff;
+      --blue-strong: #4b8cff;
+      --danger: #ff6b7a;
+      --shadow: 0 28px 80px rgba(0, 0, 0, 0.66);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: "Noto Sans KR", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background-color: #000;
+      background-image:
+        radial-gradient(circle at 50% 12%, rgba(80, 145, 255, 0.15), transparent 30%),
+        radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.08), transparent 34%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Crect width='160' height='160' fill='%23000000'/%3E%3Cg fill='white' opacity='.95'%3E%3Cpath d='M18 10l2.5 5 5.5.8-4 3.9.9 5.5L18 22.6l-4.9 2.6.9-5.5-4-3.9 5.5-.8z'/%3E%3Cpath d='M92 16l2.1 4.3 4.8.7-3.5 3.4.8 4.7L92 26.9l-4.2 2.2.8-4.7-3.5-3.4 4.8-.7z'/%3E%3Cpath d='M142 8l2.3 4.7 5.2.8-3.8 3.7.9 5.2-4.6-2.4-4.6 2.4.9-5.2-3.8-3.7 5.2-.8z'/%3E%3Cpath d='M50 58l2.4 4.8 5.3.8-3.8 3.8.9 5.3-4.8-2.5-4.8 2.5.9-5.3-3.8-3.8 5.3-.8z'/%3E%3Cpath d='M126 64l2.2 4.5 5 .7-3.6 3.5.8 5-4.4-2.3-4.4 2.3.8-5-3.6-3.5 5-.7z'/%3E%3Cpath d='M18 112l2.6 5.2 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z'/%3E%3Cpath d='M84 118l2.1 4.2 4.6.7-3.3 3.2.8 4.6-4.2-2.2-4.2 2.2.8-4.6-3.3-3.2 4.6-.7z'/%3E%3Cpath d='M148 116l2.1 4.3 4.7.7-3.4 3.3.8 4.7-4.2-2.2-4.2 2.2.8-4.7-3.4-3.3 4.7-.7z'/%3E%3C/g%3E%3C/svg%3E");
+      background-size: auto, auto, 160px 160px;
+      background-attachment: fixed;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.28)),
+        radial-gradient(circle at center, transparent 0, transparent 45%, rgba(0, 0, 0, 0.58) 100%);
+      z-index: -1;
+    }
+
+    button, input, textarea, select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, opacity 0.16s ease, border-color 0.16s ease;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .hidden { display: none !important; }
+
+    .login-wrap {
+      width: min(430px, calc(100% - 32px));
+      margin: 0 auto;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 42px 0;
+    }
+
+    .login-card,
+    .card,
+    dialog {
+      background: linear-gradient(145deg, rgba(15, 24, 36, 0.84), rgba(2, 6, 11, 0.74));
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,0.08);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .login-card {
+      width: 100%;
+      border-radius: 28px;
+      padding: 30px 24px 24px;
+    }
+
+    .lock-mark,
+    .title-mark {
+      width: 44px;
+      height: 36px;
+      margin: 0 auto 12px;
+      display: grid;
+      place-items: center;
+      color: var(--blue);
+      border: 1px solid rgba(116, 173, 255, 0.58);
+      border-radius: 10px;
+      box-shadow: 0 0 22px rgba(116, 173, 255, 0.22);
+      font-size: 20px;
+    }
+
+    .login-card h2 {
+      margin: 0;
+      text-align: center;
+      font-family: "Noto Serif KR", serif;
+      font-size: 32px;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+    }
+
+    .login-card p {
+      margin: 14px 0 24px;
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .app {
+      width: min(1080px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 100px 0 58px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 66px;
+    }
+
+    .hero-star {
+      width: 34px;
+      height: 34px;
+      margin: 0 auto 26px;
+      display: grid;
+      place-items: center;
+      font-size: 27px;
+      color: #fff;
+      text-shadow: 0 0 10px rgba(255,255,255,0.9), 0 0 30px rgba(116,173,255,0.55);
+      position: relative;
+    }
+
+    .hero-star::before,
+    .hero-star::after {
+      content: "";
+      position: absolute;
+      background: rgba(255,255,255,0.6);
+      opacity: 0.6;
+    }
+
+    .hero-star::before {
+      width: 90px;
+      height: 1px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .hero-star::after {
+      width: 1px;
+      height: 64px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-family: "Noto Serif KR", serif;
+      font-size: clamp(58px, 8vw, 104px);
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      line-height: 1.05;
+      text-indent: 0.12em;
+      color: #fffdf7;
+      text-shadow: 0 0 18px rgba(255,255,255,0.28), 0 0 48px rgba(70,120,255,0.18);
+    }
+
+    .hero p {
+      margin: 24px 0 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 18px;
+      color: rgba(218, 232, 255, 0.78);
+      font-family: "Noto Serif KR", serif;
+      font-size: 16px;
+      font-weight: 300;
+      letter-spacing: 0.72em;
+      text-indent: 0.72em;
+    }
+
+    .hero p::before,
+    .hero p::after {
+      content: "";
+      width: 78px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(151,184,255,0.62));
+    }
+
+    .hero p::after {
+      background: linear-gradient(90deg, rgba(151,184,255,0.62), transparent);
+    }
+
+    .hero-dot {
+      color: var(--blue);
+      text-indent: 0;
+      letter-spacing: 0;
+      text-shadow: 0 0 12px rgba(116, 173, 255, 0.8);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    .card {
+      border-radius: 26px;
+      padding: 34px;
+      min-height: 560px;
+    }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 34px;
+    }
+
+    .card h2 {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: "Noto Serif KR", serif;
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: -0.03em;
+    }
+
+    .icon {
+      color: var(--blue);
+      filter: drop-shadow(0 0 10px rgba(116, 173, 255, 0.45));
+      font-size: 28px;
+    }
+
+    .mini-icon-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      background: rgba(116, 173, 255, 0.06);
+      color: var(--blue);
+      border: 1px solid transparent;
+      font-size: 26px;
+    }
+
+    .mini-icon-btn:hover {
+      border-color: rgba(116,173,255,0.45);
+      box-shadow: 0 0 22px rgba(116,173,255,0.16);
+    }
+
+    label {
+      display: block;
+      margin: 22px 0 10px;
+      color: rgba(255,255,255,0.88);
+      font-weight: 500;
+      font-size: 15px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      border: 1px solid var(--line-soft);
+      border-radius: 14px;
+      background: var(--input);
+      color: var(--text);
+      outline: none;
+      padding: 18px 20px;
+      font-size: 16px;
+      min-height: 58px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    select {
+      appearance: none;
+      background-image: linear-gradient(45deg, transparent 50%, #fff 50%), linear-gradient(135deg, #fff 50%, transparent 50%);
+      background-position: calc(100% - 26px) 25px, calc(100% - 19px) 25px;
+      background-size: 7px 7px, 7px 7px;
+      background-repeat: no-repeat;
+    }
+
+    textarea {
+      min-height: 240px;
+      resize: vertical;
+      line-height: 1.72;
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: rgba(245, 248, 255, 0.42);
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: rgba(116, 173, 255, 0.70);
+      box-shadow: 0 0 0 4px rgba(116, 173, 255, 0.12), inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+
+    .primary {
+      width: 100%;
+      min-height: 66px;
+      margin-top: 28px;
+      border-radius: 14px;
+      color: white;
+      background: linear-gradient(135deg, #2b62d8 0%, #75adff 100%);
+      box-shadow: 0 18px 40px rgba(75, 140, 255, 0.34), inset 0 1px 0 rgba(255,255,255,0.30);
+      font-size: 20px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+    }
+
+    .primary:hover {
+      box-shadow: 0 20px 48px rgba(75, 140, 255, 0.46), inset 0 1px 0 rgba(255,255,255,0.34);
+      transform: translateY(-1px);
+    }
+
+    .status {
+      min-height: 21px;
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .letters {
+      display: grid;
+      gap: 18px;
+    }
+
+    .letter-item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      min-height: 94px;
+      padding: 19px 20px;
+      border-radius: 16px;
+      border: 1px solid var(--line-soft);
+      background: rgba(17, 27, 38, 0.64);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    }
+
+    .letter-item:hover {
+      transform: translateY(-2px);
+      border-color: rgba(116, 173, 255, 0.40);
+      background: rgba(22, 34, 48, 0.76);
+    }
+
+    .letter-main {
+      min-width: 0;
+      cursor: pointer;
+    }
+
+    .letter-title {
+      display: block;
+      margin-bottom: 9px;
+      font-size: 19px;
+      font-weight: 500;
+      line-height: 1.35;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .letter-meta {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .arrow {
+      color: rgba(255,255,255,0.85);
+      font-size: 34px;
+      line-height: 1;
+      transform: translateY(-1px);
+      cursor: pointer;
+    }
+
+    .delete-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: rgba(255, 107, 122, 0.08);
+      color: rgba(255, 145, 156, 0.95);
+      border: 1px solid rgba(255, 107, 122, 0.16);
+      font-size: 16px;
+      opacity: 0.78;
+    }
+
+    .delete-btn:hover {
+      opacity: 1;
+      border-color: rgba(255,107,122,0.45);
+      box-shadow: 0 0 18px rgba(255,107,122,0.16);
+    }
+
+    .empty {
+      padding: 48px 18px;
+      border: 1px dashed var(--line-soft);
+      border-radius: 18px;
+      text-align: center;
+      color: var(--muted);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .count {
+      margin-top: 28px;
+      text-align: center;
+      color: rgba(255,255,255,0.58);
+      font-size: 16px;
+    }
+
+    .count strong {
+      color: var(--blue);
+      font-weight: 500;
+    }
+
+    dialog {
+      width: min(620px, calc(100% - 32px));
+      border-radius: 26px;
+      border: 1px solid var(--line);
+      padding: 0;
+      color: var(--text);
+    }
+
+    dialog::backdrop {
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(4px);
+    }
+
+    .modal {
+      padding: 32px;
+      background: linear-gradient(145deg, rgba(10, 18, 27, 0.96), rgba(2, 6, 11, 0.96));
+      border-radius: 26px;
+    }
+
+    .modal h3 {
+      margin: 0 0 12px;
+      font-family: "Noto Serif KR", serif;
+      font-size: 30px;
+      font-weight: 400;
+      line-height: 1.35;
+    }
+
+    .modal-body {
+      margin-top: 22px;
+      padding: 22px;
+      min-height: 180px;
+      border-radius: 18px;
+      border: 1px solid var(--line-soft);
+      background: rgba(255,255,255,0.04);
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.85;
+      color: rgba(255,255,255,0.88);
+    }
+
+    .modal-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .ghost, .danger {
+      min-height: 52px;
+      border-radius: 14px;
+      border: 1px solid var(--line-soft);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .danger {
+      color: #ff9ca6;
+      border-color: rgba(255,107,122,0.24);
+      background: rgba(255,107,122,0.08);
+    }
+
+    footer {
+      margin-top: 110px;
+      text-align: center;
+      color: rgba(255,255,255,0.52);
+      font-size: 14px;
+    }
+
+    footer span {
+      color: var(--blue);
+      text-shadow: 0 0 16px rgba(116,173,255,0.55);
+    }
+
+    @media (max-width: 860px) {
+      body {
+        background-size: auto, auto, 130px 130px;
+      }
+
+      .app {
+        width: min(560px, calc(100% - 28px));
+        padding: 62px 0 38px;
+      }
+
+      .hero {
+        margin-bottom: 42px;
+      }
+
+      .hero-star {
+        margin-bottom: 18px;
+        transform: scale(0.82);
+      }
+
+      .hero h1 {
+        font-size: clamp(44px, 13vw, 66px);
+        letter-spacing: 0.09em;
+        text-indent: 0.09em;
+      }
+
+      .hero p {
+        margin-top: 18px;
+        gap: 10px;
+        font-size: 13px;
+        letter-spacing: 0.38em;
+        text-indent: 0.38em;
+      }
+
+      .hero p::before,
+      .hero p::after {
+        width: 38px;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+        gap: 22px;
+      }
+
+      .card {
+        min-height: auto;
+        padding: 25px 18px 22px;
+        border-radius: 23px;
+      }
+
+      .card-head {
+        margin-bottom: 22px;
+      }
+
+      .card h2 {
+        font-size: 24px;
+      }
+
+      input, textarea, select {
+        min-height: 56px;
+        font-size: 16px;
+        padding: 16px 17px;
+      }
+
+      textarea {
+        min-height: 190px;
+      }
+
+      .primary {
+        min-height: 60px;
+        font-size: 18px;
+      }
+
+      .letter-item {
+        min-height: 84px;
+        padding: 16px;
+        gap: 10px;
+      }
+
+      .letter-title {
+        font-size: 17px;
+      }
+
+      .letter-meta {
+        font-size: 13px;
+      }
+
+      .delete-btn {
+        width: 36px;
+        height: 36px;
+      }
+
+      .arrow {
+        font-size: 28px;
+      }
+
+      .modal {
+        padding: 24px 18px;
+      }
+
+      .modal h3 {
+        font-size: 25px;
+      }
+
+      .modal-actions {
+        grid-template-columns: 1fr;
+      }
+
+      footer {
+        margin-top: 58px;
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+    }
+
+    @media (max-width: 420px) {
+      .app {
+        width: calc(100% - 22px);
+      }
+
+      .hero h1 {
+        font-size: 46px;
+      }
+
+      .hero p {
+        letter-spacing: 0.23em;
+        text-indent: 0.23em;
+      }
+
+      .hero p::before,
+      .hero p::after {
+        width: 24px;
+      }
+
+      .card {
+        padding: 22px 15px 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <section id="login" class="login-wrap">
+    <div class="login-card">
+      <div class="lock-mark">♡</div>
+      <h2>교환일기</h2>
+      <p>비밀번호를 입력하면 편지를 쓰고 읽을 수 있어요.</p>
+
+      <label for="password">비밀번호</label>
+      <input id="password" type="password" placeholder="둘만 아는 비밀번호" autocomplete="current-password" />
+      <button class="primary" onclick="login()">열기</button>
+      <div id="loginStatus" class="status"></div>
+    </div>
+  </section>
+
+  <main id="app" class="app hidden">
+    <header class="hero">
+      <div class="hero-star">★</div>
+      <h1>교환일기</h1>
+      <p><span class="hero-dot">•</span> 우리만의 작은 기록 <span class="hero-dot">•</span></p>
+    </header>
+
+    <section class="layout">
+      <div class="card">
+        <div class="card-head">
+          <h2><span class="icon">✎</span> 편지 쓰기</h2>
+          <span class="icon">✧</span>
+        </div>
+
+        <label for="writer">작성자</label>
+        <select id="writer">
+          <option value="예은">예은</option>
+          <option value="준희">준희</option>
+        </select>
+
+        <label for="title">제목</label>
+        <input id="title" placeholder="제목을 입력해주세요" />
+
+        <label for="content">내용</label>
+        <textarea id="content" placeholder="오늘의 이야기를 적어보세요...."></textarea>
+
+        <button id="saveBtn" class="primary" onclick="saveLetter()">⌁ 편지 보내기</button>
+        <div id="saveStatus" class="status"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2><span class="icon">✉</span> 편지 목록</h2>
+          <button class="mini-icon-btn" onclick="loadLetters()" aria-label="새로고침">↻</button>
+        </div>
+
+        <div id="letters" class="letters">
+          <div class="empty">아직 편지가 없어요.</div>
+        </div>
+        <div id="letterCount" class="count"></div>
+      </div>
+    </section>
+
+    <footer>© 2026 교환일기 <span>♥</span></footer>
+  </main>
+
+  <dialog id="letterDialog">
+    <div class="modal">
+      <h3 id="modalTitle"></h3>
+      <div id="modalMeta" class="letter-meta"></div>
+      <div id="modalBody" class="modal-body"></div>
+
+      <div class="modal-actions">
+        <button class="ghost" onclick="document.getElementById('letterDialog').close()">닫기</button>
+        <button id="modalDeleteBtn" class="danger">삭제하기</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbzTfZuRYkhoMnV874h4MxGHBf1HEwBK3qKcsUSQ0SeZuoZu3OYzKzAiXzV1uUE5dSDXAg/exec";
+    const PASSWORD = "0418";
+
+    const $ = (id) => document.getElementById(id);
+    let currentLetter = null;
+
+    function login() {
+      if ($("password").value === PASSWORD) {
+        $("login").classList.add("hidden");
+        $("app").classList.remove("hidden");
+        loadLetters();
+      } else {
+        $("loginStatus").textContent = "비밀번호가 달라요.";
+      }
+    }
+
+    $("password").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") login();
+    });
+
+    async function saveLetter() {
+      const writer = $("writer").value.trim();
+      const title = $("title").value.trim();
+      const content = $("content").value.trim();
+      const mood = "";
+
+      if (!title || !content) {
+        $("saveStatus").textContent = "제목이랑 내용을 둘 다 적어주세요.";
+        return;
+      }
+
+      $("saveBtn").disabled = true;
+      $("saveStatus").textContent = "저장 중...";
+
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          mode: "cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ writer, mood, title, content })
+        });
+
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.message || "저장 실패");
+
+        $("title").value = "";
+        $("content").value = "";
+        $("saveStatus").textContent = "저장 완료.";
+        await loadLetters();
+      } catch (err) {
+        $("saveStatus").textContent = "저장에 실패했어요. Apps Script 설정을 확인해주세요.";
+      } finally {
+        $("saveBtn").disabled = false;
+      }
+    }
+
+    async function loadLetters() {
+      const box = $("letters");
+      const count = $("letterCount");
+
+      box.innerHTML = `<div class="empty">불러오는 중...</div>`;
+      count.textContent = "";
+
+      try {
+        const res = await fetch(API_URL);
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.message || "불러오기 실패");
+
+        const letters = data.letters || [];
+
+        if (letters.length === 0) {
+          box.innerHTML = `<div class="empty">아직 편지가 없어요.</div>`;
+          count.textContent = "";
+          return;
+        }
+
+        box.innerHTML = "";
+        count.innerHTML = `총 <strong>${letters.length}</strong>개의 편지`;
+
+        letters.slice().reverse().forEach((letter) => {
+          const item = document.createElement("div");
+          item.className = "letter-item";
+
+          item.innerHTML = `
+            <div class="letter-main">
+              <strong class="letter-title">${escapeHtml(letter.title)}</strong>
+              <div class="letter-meta">
+                ${escapeHtml(letter.writer)} · ${formatDate(letter.date)}
+                ${letter.mood ? " · " + escapeHtml(letter.mood) : ""}
+              </div>
+            </div>
+            <div class="arrow" aria-hidden="true">›</div>
+            <button class="delete-btn" type="button" aria-label="삭제">×</button>
+          `;
+
+          item.querySelector(".letter-main").onclick = () => openLetter(letter);
+          item.querySelector(".arrow").onclick = () => openLetter(letter);
+          item.querySelector(".delete-btn").onclick = async (e) => {
+            e.stopPropagation();
+            await deleteLetter(letter);
+          };
+
+          box.appendChild(item);
+        });
+      } catch (err) {
+        box.innerHTML = `<div class="empty">편지를 불러오지 못했어요.</div>`;
+      }
+    }
+
+    function openLetter(letter) {
+      currentLetter = letter;
+
+      $("modalTitle").textContent = letter.title;
+      $("modalMeta").textContent = `${letter.writer} · ${formatDate(letter.date)}${letter.mood ? " · " + letter.mood : ""}`;
+      $("modalBody").textContent = letter.content;
+
+      $("modalDeleteBtn").onclick = async () => {
+        await deleteLetter(currentLetter);
+        $("letterDialog").close();
+      };
+
+      $("letterDialog").showModal();
+    }
+
+    async function deleteLetter(letter) {
+      if (!letter || !letter.row) return;
+
+      const ok = confirm("이 편지를 정말 삭제할까요?");
+      if (!ok) return;
+
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          mode: "cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ action: "delete", row: letter.row })
+        });
+
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.message || "삭제 실패");
+
+        await loadLetters();
+      } catch (err) {
+        alert("삭제에 실패했어요. Apps Script 설정을 확인해주세요.");
+      }
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const d = new Date(value);
+      if (Number.isNaN(d.getTime())) return value;
+
+      return d.toLocaleString("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    function escapeHtml(str = "") {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+  </script>
+</body>
+</html>
