@@ -10,7 +10,7 @@ function login() {
     $("app").classList.remove("hidden");
     loadLetters();
   } else {
-    $("loginStatus").textContent = "비밀번호가 달라요.";
+    $("loginStatus").textContent = "비밀번호를 틀리다니!!!!";
   }
 }
 
@@ -68,7 +68,7 @@ async function loadLetters() {
 
     const letters = data.letters || [];
     if (letters.length === 0) {
-      box.innerHTML = `<div class="empty">아직 편지가 없어요.</div>`;
+      box.innerHTML = `<div class="empty">아직 편지가 없눈데...</div>`;
       return;
     }
 
@@ -99,7 +99,7 @@ async function loadLetters() {
 
     count.textContent = `총 ${letters.length}개의 편지`;
   } catch (err) {
-    box.innerHTML = `<div class="empty">편지를 불러오지 못했어요.</div>`;
+    box.innerHTML = `<div class="empty">편지를 가져오다가 넘어져써요...</div>`;
   }
 }
 
